@@ -7,7 +7,6 @@ import cors from "cors";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 
-
 const port = process.env.PORT || 5000;
 
 connectDB();
@@ -22,24 +21,24 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     credentials: true,
-    origin: "http://127.0.0.1:5173",
+    origin: "http://localhost:5173",
   })
 );
 
 app.use("/api/users", userRoutes);
 
-// if (process.env.NODE_ENV === "production") {
-//   const __dirname = path.resolve();
-//   app.use(express.static(path.join(__dirname, "/frontend/dist")));
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-//   app.get("*", (req, res) =>
-//     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
-//   );
-// } else {
-//   app.get("/", (req, res) => {
-//     res.send("API is running....");
-//   });
-// }
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);

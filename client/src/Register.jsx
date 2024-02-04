@@ -1,20 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import axios from "axios";
+import { UserContext } from "./UserContext";
 
 export default function Register() {
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setLoggedInUserName, setId } = useContext(UserContext);
+
+  async function handleRegisterUser(e) {
+    e.preventDefault();
+    const { data } = await axios.post("http://localhost:5000/api/users", {
+      name,
+      userName,
+      email,
+      password,
+    });
+    setLoggedInUserName(userName);
+    setId(data.id);
+  }
 
   return (
     <div className="bg-blue-50 h-screen flex items-center">
-      <form className="w-64 mx-auto mb-12">
+      <form className="w-64 mx-auto mb-12" onSubmit={handleRegisterUser}>
         <input
           type="text"
           placeholder="Full Name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className=" block w-full p-2 mb-2   border"
         />
         <input

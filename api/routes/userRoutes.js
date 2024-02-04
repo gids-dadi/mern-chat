@@ -7,7 +7,6 @@ import {
   updateUserProfile,
 } from "../controllers/userController.js";
 import cookieParser from "cookie-parser";
-import { protectRouth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 

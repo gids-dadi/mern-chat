@@ -29,7 +29,6 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, userName, email, password } = req.body;
-
   const userNameExist = await User.findOne({ userName });
   const userEmailExist = await User.findOne({ email });
 
@@ -46,12 +45,11 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
   });
-
   if (user) {
     generateToken(res, user._id);
 
     res.status(201).json({
-      _id: user._id,
+      id: user._id,
       name: user.userName,
       userName: user.userName,
       email: user.email,
@@ -77,7 +75,7 @@ const logoutUser = (req, res) => {
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  const { jwtCookie } = req.cookies;
+  const jwtCookie = req.cookies?.jwtCookie;
 
   if (jwtCookie) {
     jwt.verify(jwtCookie, process.env.JWT_SECRET, {}, async (err, data) => {
@@ -91,8 +89,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
       });
     });
   } else {
-    res.status(404);
-    throw new Error("User not found");
+    res.status(401);
+    throw new Error("Token not found");
   }
 });
 

@@ -1,14 +1,14 @@
 import { useContext } from "react";
-import Register from "./Register";
+import Register from "./RegisterAndLogin";
 import { UserContext } from "./UserContext";
+import Chat from "./chat";
 
 export default function Root() {
   const { loggedInUserName, id } = useContext(UserContext);
 
-  console.log(loggedInUserName);
 
   if (loggedInUserName) {
-    return <h1>Logged In</h1>;
+    return <Chat />;
   }
 
   return <Register />;

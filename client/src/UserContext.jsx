@@ -9,7 +9,8 @@ export function UserContextProvider({ children }) {
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/users/profile").then((response) => {
-      console.log(response.data);
+      setId(response.data.userId);
+      setLoggedInUserName(response.data.userName);
     });
   }, []);
 

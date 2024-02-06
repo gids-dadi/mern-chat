@@ -8,16 +8,12 @@ import jwt from "jsonwebtoken";
 // @access  Public
 const loginUser = asyncHandler(async (req, res) => {
   const { userName, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ userName });
 
   if (user && (await user.matchPassword(password))) {
     const userId = user._id;
     generateToken(res, userId);
-    res.json({
-      id: user._id,
-      userName: user.userName,
-      email: user.email,
-    });
+    res.json({ user });
   } else {
     res.status(401);
     throw new Error("Invalid email or password");
@@ -28,21 +24,16 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, userName, email, password } = req.body;
+  const { userName, password } = req.body;
   const userNameExist = await User.findOne({ userName });
-  const userEmailExist = await User.findOne({ email });
 
-  if (userNameExist || userEmailExist) {
+  if (userNameExist) {
     res.status(400);
-    throw new Error(
-      `User ${userEmailExist} already exists or ${userNameExist} is already taken`
-    );
+    throw new Error(`User name ${userNameExist} is already taken`);
   }
 
   const user = await User.create({
-    name,
     userName,
-    email,
     password,
   });
   if (user) {
@@ -82,11 +73,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       if (err) throw err;
       const userDocs = await User.findById(data.userId);
 
-      res.json({
-        id: userDocs._id,
-        name: userDocs.name,
-        email: userDocs.email,
-      });
+      res.json({ userDocs });
     });
   } else {
     res.status(401);

@@ -6,17 +6,27 @@ export const UserContext = createContext({});
 export function UserContextProvider({ children }) {
   const [loggedInUserName, setLoggedInUserName] = useState(null);
   const [id, setId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  // const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/users/profile").then((response) => {
-      setId(response.data.userId);
-      setLoggedInUserName(response.data.userName);
+    setLoading(true);
+    axios.get("/api/users/profile").then((response) => {
+      const { userDocs } = response.data;
+      setId(userDocs._id);
+      setLoggedInUserName(userDocs.userName);
     });
+    setLoading(false);
   }, []);
 
   return (
     <UserContext.Provider
-      value={{ loggedInUserName, setLoggedInUserName, id, setId }}
+      value={{
+        loggedInUserName,
+        setLoggedInUserName,
+        setId,
+        loading,
+      }}
     >
       {children}
     </UserContext.Provider>

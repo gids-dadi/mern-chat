@@ -7,6 +7,8 @@ import cors from "cors";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import { WebSocketServer } from "ws";
+import jwt from "jsonwebtoken";
+import User from "./models/userModel.js";
 
 const port = process.env.PORT || 5000;
 
@@ -16,7 +18,6 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static("/uploads"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -50,6 +51,22 @@ const server = app.listen(port, () =>
 
 const wss = new WebSocketServer({ server });
 
-wss.on("connection", (connection) => {
-  console.log("Web socket connected succssfully");
+wss.on("connection", (connection, req) => {
+  // Grap the coolie from the request
+  const cookies = req.headers.cookie;
+  if (cookies) {
+    const cookieString = cookies
+      .split(";")
+      .find((str) => (str) => startsWith("jwtCookie="));
+
+    if (cookieString) {
+      const token = cookieString.split("=")[1];
+      if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userDocs) => {
+          if (err) throw err;
+          console.log(userDocs);
+        });
+      }
+    }
+  }
 });

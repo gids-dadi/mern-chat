@@ -18,7 +18,7 @@ export default function Register() {
       password,
     });
     setLoggedInUserName(userName);
-    setId(data.id);
+    setId(data._id);
   }
 
   return (

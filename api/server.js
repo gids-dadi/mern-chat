@@ -52,21 +52,25 @@ const server = app.listen(port, () =>
 const wss = new WebSocketServer({ server });
 
 wss.on("connection", (connection, req) => {
-  // Grap the coolie from the request
-  const cookies = req.headers.cookie;
-  if (cookies) {
-    const cookieString = cookies
-      .split(";")
-      .find((str) => (str) => startsWith("jwtCookie="));
+  // Grap the cookie from the request
+  const cookies = req.headers.cookies;
+  console.log(cookies);
+  // if (cookies) {
+  //   const cookieString = cookies
+  //     .split(";")
+  //     .find((str) => (str) => startsWith("jwtCookie="));
 
-    if (cookieString) {
-      const token = cookieString.split("=")[1];
-      if (token) {
-        jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userDocs) => {
-          if (err) throw err;
-          console.log(userDocs);
-        });
-      }
-    }
+  if (cookieString) {
+    // const token = cookieString.split("=")[1];
+    // if (token) {
+    //   jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userId) => {
+    // if (err) throw err;
+    // const userDocs = await User.findById(data.userId);
+    // connection.userId = userDocs._id;
+    // connection.username = userDocs.username;
+    // });
   }
+  // }
+  // }
+  // console.log([...wss.clients].length());
 });

@@ -24,16 +24,16 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { userName, password } = req.body;
-  const userNameExist = await User.findOne({ userName });
+  const { username, password } = req.body;
+  const usernameExist = await User.findOne({ username });
 
-  if (userNameExist) {
+  if (usernameExist) {
     res.status(400);
-    throw new Error(`User name ${userNameExist} is already taken`);
+    throw new Error(`User name ${usernameExist} is already taken`);
   }
 
   const user = await User.create({
-    userName,
+    username,
     password,
   });
   if (user) {
@@ -41,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     res.status(201).json({
       id: user._id,
-      userName: user.userName,
+      username: user.username,
     });
   } else {
     res.status(400);
@@ -83,28 +83,25 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
-
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-    });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
-  }
+  // const user = await User.findById(req.user._id);
+  // if (user) {
+  //   user.name = req.body.name || user.name;
+  //   user.email = req.body.email || user.email;
+  //   if (req.body.password) {
+  //     user.password = req.body.password;
+  //   }
+  //   const updatedUser = await user.save();
+  //   res.json({
+  //     _id: updatedUser._id,
+  //     name: updatedUser.name,
+  //     email: updatedUser.email,
+  //   });
+  // } else {
+  //   res.status(404);
+  //   throw new Error("User not found");
+  // }
 });
+
 export {
   loginUser,
   registerUser,

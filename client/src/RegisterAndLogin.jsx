@@ -3,9 +3,7 @@ import axios from "axios";
 import { UserContext } from "./UserContext";
 
 export default function Register() {
-  // const [name, setName] = useState("");
-  const [userName, setUserName] = useState("");
-  // const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginOrRegister, setLoginOrRegister] = useState("register");
   const { setLoggedInUserName, setId } = useContext(UserContext);
@@ -14,44 +12,30 @@ export default function Register() {
     e.preventDefault();
     const url = loginOrRegister === "register" ? "" : "login";
     const { data } = await axios.post(`/api/users/${url}`, {
-      userName,
+      username,
       password,
     });
-    setLoggedInUserName(userName);
+    setLoggedInUserName(username);
     setId(data._id);
   }
 
   return (
     <div className="bg-blue-50 h-screen flex items-center">
       <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
-        {/* <input
-          type="text"
-          placeholder="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className=" block w-full p-2 mb-2   border"
-        /> */}
         <input
           type="text"
           placeholder="username"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          className=" block w-full p-2 mb-2   border"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className=" block w-full p-2 mb-2   border rounded-lg"
         />
 
-        {/* <input
-          type="email"
-          placeholder="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className=" block w-full p-2 mb-2   border"
-        /> */}
         <input
           type="password"
           placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="block w-full p-2 mb-2  border "
+          className="block w-full p-2 mb-2  border rounded-lg "
         />
         <button className="bg-blue-500 text-white block w-full rounded-sm p-2">
           {loginOrRegister === "register" ? "Register" : "Login"}
@@ -73,7 +57,7 @@ export default function Register() {
             <div>
               Don't have an account?{" "}
               <button
-                className="text-blue-300"
+                className="text-blue-300 rounded-lg"
                 onClick={() => setLoginOrRegister("register")}
               >
                 Register
